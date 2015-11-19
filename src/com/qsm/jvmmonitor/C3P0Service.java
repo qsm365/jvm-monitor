@@ -21,7 +21,7 @@ public class C3P0Service {
 	
 	private static List<String> data_source_name = new ArrayList<String>();
 	
-	public static void monitorC3P0(JMXConnector c) throws AttributeNotFoundException, InstanceNotFoundException, MalformedObjectNameException, MBeanException, ReflectionException, IOException{
+	public static void monitorC3P0(JMXConnector c) throws AttributeNotFoundException, MalformedObjectNameException, MBeanException, ReflectionException, IOException, InstanceNotFoundException{
 		for(String dsn:data_source_name){
 			String on = "com.mchange.v2.c3p0:type=PooledDataSource"+dsn;
 			Integer num_connections = (Integer)JMXCommonService.getValueFromJMXMBean(c,on,"numConnections");
@@ -48,6 +48,7 @@ public class C3P0Service {
 	}
 	
 	private static void getName(JMXConnector c) throws MalformedObjectNameException, IOException, AttributeNotFoundException, InstanceNotFoundException, MBeanException, ReflectionException{
+		data_source_name = new ArrayList<String>();
 		String query="com.mchange.v2.c3p0:type=PooledDataSource*";
 		Set<ObjectName> qr=JMXCommonService.queryNames(c,query);
 		for(ObjectName on:qr){

@@ -26,16 +26,12 @@ public class monitor {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		//String host ="10.10.113.26";
-		//Integer port = 8081;
 		String host = args[0];
 		Integer port = Integer.parseInt(args[1]);
 		Map<String,String[]> map = new HashMap<String,String[]>();
 		String[] credentials = new String[2];
 		credentials[0] = args[2];
 		credentials[1] = args[3];
-		//credentials[0] = "admin";
-		//credentials[1] = "aiwms2014";
 		map.put("jmx.remote.credentials", credentials);
 		JMXConnector c = null;
 		String redishost = args[4];
@@ -72,7 +68,11 @@ public class monitor {
 						TomcatService.monitorTomcat(c);
 					}
 					if("c3p0".equals(con)){
-						C3P0Service.monitorC3P0(c);
+						try{
+							C3P0Service.monitorC3P0(c);
+						}catch(InstanceNotFoundException e){
+							C3P0Service.initC3P0(c);
+						}
 					}
 				}
 				
@@ -150,6 +150,8 @@ public class monitor {
 		}
 		
 		JvmService.initJVM(c);
+		
+		JvmService.jvm_monitor_content.clear();
 		
 		if(JMXCommonService.hasNameInJMXMbean(c,"com.bes.appserv:type=Engine")){
 			//this is a bes jvm
