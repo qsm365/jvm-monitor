@@ -45,6 +45,7 @@ public class monitor {
 			}
 		}
 		myRedis.init(host, port, redishost, redisport);
+		myRedis.clearHistory();
 		while(true){
 			
 			try {
@@ -95,7 +96,7 @@ public class monitor {
 				}
 			} catch (IOException e) {
 				System.out.println("io exception,wait for 60s to retry");
-				e.printStackTrace();
+				//e.printStackTrace();
 				c = null;
 				try {
 				Thread.sleep(60000);

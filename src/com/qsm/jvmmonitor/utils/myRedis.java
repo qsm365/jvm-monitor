@@ -25,6 +25,24 @@ public class myRedis {
 		myRedis.redisport = redisport;
 	}
 	
+	public static void clearHistory(){
+		JedisUtil ju = JedisUtil.getInstance();
+		Jedis j = ju.getJedis(redishost, redisport);
+		try{
+			j.del(host+":"+port+"-c3p0base");
+			j.del(host+":"+port+"-besbase");
+			j.del(host+":"+port+"-tomcatbase");
+			j.del(host+":"+port+"-jvmbase");
+		}catch(NullPointerException e){
+			System.out.println("connect to redis error");
+		}catch(JedisConnectionException e){
+			System.out.println("connect to redis error");
+		}catch(Exception e){
+			j.close();
+			System.out.println("redis server error");
+		}
+	}
+	
 	public static void saveC3P0Base(C3P0BaseInfo val){
 		JedisUtil ju = JedisUtil.getInstance();
 		Jedis j = ju.getJedis(redishost, redisport);
