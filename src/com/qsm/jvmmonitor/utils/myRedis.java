@@ -136,6 +136,14 @@ public class myRedis {
 			j.hset(key,"os_arch" ,val.os_arch);
 			j.hset(key,"os_version" ,val.os_version);
 			j.hset(key,"max_file_descriptor" ,val.max_file_descriptor+"");
+			j.hset(key,"init_eden_mem" ,val.init_eden_mem+"");
+			j.hset(key,"init_old_mem" ,val.init_old_mem+"");
+			j.hset(key,"init_perm_mem" ,val.init_perm_mem+"");
+			j.hset(key,"init_surv_mem" ,val.init_surv_mem+"");
+			j.hset(key,"max_eden_mem" ,val.max_eden_mem+"");
+			j.hset(key,"max_old_mem" ,val.max_old_mem+"");
+			j.hset(key,"max_perm_mem" ,val.max_perm_mem+"");
+			j.hset(key,"max_surv_mem" ,val.max_surv_mem+"");
 			j.close();
 		}catch(NullPointerException e){
 			System.out.println("connect to redis error");
@@ -227,7 +235,11 @@ public class myRedis {
 					 val.thread_count+";"+
 					 val.cpu_load+";"+
 					 val.class_count+";"+
-		             val.open_file_descriptor+";";
+		             val.open_file_descriptor+";"+
+				     val.used_eden_mem+";"+
+				     val.used_old_mem+";"+
+				     val.used_perm_mem+";"+
+				     val.used_surv_mem+";";
 		try{
 			j.lpush(host+":"+port+"-jvm",log);
 			j.hset("jvm-list", host+":"+port, ""+start);

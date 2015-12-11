@@ -28,6 +28,14 @@ public class JvmMonitorInfo {
 	//OpenFileDescriptorCount
 	public Long open_file_descriptor;
 	
+	public Long used_eden_mem;
+	
+	public Long used_old_mem;
+	
+	public Long used_perm_mem;
+	
+	public Long used_surv_mem;
+	
 	public JvmMonitorInfo(){
 		
 	}
@@ -37,12 +45,21 @@ public class JvmMonitorInfo {
 			Integer thread_count,
 			Double cpu_load,
 			Integer class_count,
-			Long open_file_descriptor){
+			Long open_file_descriptor,
+			Long used_eden_mem,
+			Long used_old_mem,
+			Long used_perm_mem,
+			Long used_surv_mem
+			){
 		this.used_heap_mem=used_heap_mem;
 		this.used_nonheap_mem=used_nonheap_mem;
 		this.thread_count=thread_count;
 		this.cpu_load=cpu_load;
 		this.class_count=class_count;
 		this.open_file_descriptor=open_file_descriptor;
+		this.used_eden_mem=used_eden_mem;
+		this.used_old_mem=used_old_mem;
+		this.used_perm_mem=used_perm_mem;
+		this.used_surv_mem=used_surv_mem;
 	}
 }

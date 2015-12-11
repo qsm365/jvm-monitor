@@ -30,9 +30,22 @@ public class JvmService {
 		Integer threadcount = (Integer)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=Threading", "ThreadCount");
 		
 		Double cpuload = 0.0;
+		Long used_eden_mem = 0L;
+		Long used_old_mem = 0L;
+		Long used_perm_mem = 0L;
+		Long used_surv_mem = 0L;
+		
 		if("ibm".equals(jvm_monitor_type)){
 			cpuload = -1.0;
 		}else if("sun".equals(jvm_monitor_type)){
+			CompositeData cd1 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Eden Space","Usage");
+			CompositeData cd2 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Old Gen","Usage");
+			CompositeData cd3 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Perm Gen","Usage");
+			CompositeData cd4 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Survivor Space","Usage");
+			used_eden_mem = (Long)cd1.get("used");
+			used_old_mem = (Long)cd2.get("used");
+			used_perm_mem = (Long)cd3.get("used");
+			used_surv_mem = (Long)cd4.get("used");
 			cpuload = -1.0;
 		}
 		//windows only (Double)getValueFromJMXMBean(c,"java.lang:type=OperatingSystem", "ProcessCpuLoad");
@@ -46,7 +59,7 @@ public class JvmService {
 			open_file_descriptor = (Long)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=OperatingSystem", "OpenFileDescriptorCount");
 		}
 		
-		JvmMonitorInfo val = new JvmMonitorInfo((Long)heapmem.get("used"),(Long)nonheapmem.get("used"),threadcount,cpuload,classcount,open_file_descriptor);
+		JvmMonitorInfo val = new JvmMonitorInfo((Long)heapmem.get("used"),(Long)nonheapmem.get("used"),threadcount,cpuload,classcount,open_file_descriptor,used_eden_mem,used_old_mem,used_perm_mem,used_surv_mem);
 		myRedis.saveJvmMonitor(val);
 	}
 	
@@ -55,9 +68,29 @@ public class JvmService {
 		Long init_heap_mem = (Long) cd.get("init");
 		Long max_heap_mem = (Long) cd.get("max");
 		Long total_phy_mem = 0L;
+		Long init_eden_mem = 0L;
+		Long init_old_mem = 0L;
+		Long init_perm_mem = 0L;
+		Long init_surv_mem = 0L;
+		Long max_eden_mem = 0L;
+		Long max_old_mem= 0L;
+		Long max_perm_mem = 0L;
+		Long max_surv_mem = 0L;
 		if("ibm".equals(jvm_monitor_type)){
 			total_phy_mem = (Long)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=OperatingSystem","TotalPhysicalMemory");
 		}else if("sun".equals(jvm_monitor_type)){
+			CompositeData cd1 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Eden Space","Usage");
+			CompositeData cd2 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Old Gen","Usage");
+			CompositeData cd3 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Perm Gen","Usage");
+			CompositeData cd4 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Survivor Space","Usage");
+			init_eden_mem = (Long)cd1.get("init");
+			max_eden_mem = (Long)cd1.get("max");
+			init_old_mem = (Long)cd2.get("init");
+			max_old_mem= (Long)cd2.get("max");
+			init_perm_mem = (Long)cd3.get("init");
+			max_perm_mem = (Long)cd3.get("max");
+			init_surv_mem = (Long)cd4.get("init");
+			max_surv_mem = (Long)cd4.get("max");
 			total_phy_mem = (Long)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=OperatingSystem","TotalPhysicalMemorySize");
 		}
 		Integer total_phy_cpu = (Integer)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=OperatingSystem","AvailableProcessors");
@@ -76,7 +109,7 @@ public class JvmService {
 			max_file_descriptor = (Long)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=OperatingSystem", "MaxFileDescriptorCount");
 		}
 		
-		JvmBaseInfo val = new JvmBaseInfo(init_heap_mem,max_heap_mem,total_phy_mem,total_phy_cpu,vm_name,vm_version,os_name,os_arch,os_version,max_file_descriptor);
+		JvmBaseInfo val = new JvmBaseInfo(init_heap_mem,max_heap_mem,total_phy_mem,total_phy_cpu,vm_name,vm_version,os_name,os_arch,os_version,max_file_descriptor,init_eden_mem,init_old_mem,init_perm_mem,init_surv_mem,max_eden_mem,max_old_mem,max_perm_mem,max_surv_mem);
 		myRedis.saveJvmBase(val);
 	}
 	
