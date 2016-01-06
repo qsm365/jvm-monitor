@@ -239,7 +239,11 @@ public class myRedis {
 				     val.used_eden_mem+";"+
 				     val.used_old_mem+";"+
 				     val.used_perm_mem+";"+
-				     val.used_surv_mem+";";
+				     val.used_surv_mem+";"+
+				     val.ygc+";"+
+				     val.ygct+";"+
+				     val.fgc+";"+
+				     val.fgct+";";
 		try{
 			j.lpush(host+":"+port+"-jvm",log);
 			j.hset("jvm-list", host+":"+port, ""+start);

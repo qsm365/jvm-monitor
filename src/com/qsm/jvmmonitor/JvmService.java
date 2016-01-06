@@ -35,6 +35,11 @@ public class JvmService {
 		Long used_perm_mem = 0L;
 		Long used_surv_mem = 0L;
 		
+		Long ygc = 0L;
+		Long ygct = 0L;
+		Long fgc = 0L;
+		Long fgct = 0L;
+		
 		if("ibm".equals(jvm_monitor_type)){
 			cpuload = -1.0;
 		}else if("sun".equals(jvm_monitor_type)){
@@ -42,10 +47,17 @@ public class JvmService {
 			CompositeData cd2 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Old Gen","Usage");
 			CompositeData cd3 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Perm Gen","Usage");
 			CompositeData cd4 = (CompositeData)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=MemoryPool,name=PS Survivor Space","Usage");
+			
 			used_eden_mem = (Long)cd1.get("used");
 			used_old_mem = (Long)cd2.get("used");
 			used_perm_mem = (Long)cd3.get("used");
 			used_surv_mem = (Long)cd4.get("used");
+			
+			ygc = (Long)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=GarbageCollector,name=PS Scavenge","CollectionCount");
+			ygct = (Long)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=GarbageCollector,name=PS Scavenge","CollectionTime");
+			fgc = (Long)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=GarbageCollector,name=PS MarkSweep","CollectionCount");
+			fgct = (Long)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=GarbageCollector,name=PS MarkSweep","CollectionTime");
+			
 			cpuload = -1.0;
 		}
 		//windows only (Double)getValueFromJMXMBean(c,"java.lang:type=OperatingSystem", "ProcessCpuLoad");
@@ -59,7 +71,7 @@ public class JvmService {
 			open_file_descriptor = (Long)JMXCommonService.getValueFromJMXMBean(c,"java.lang:type=OperatingSystem", "OpenFileDescriptorCount");
 		}
 		
-		JvmMonitorInfo val = new JvmMonitorInfo((Long)heapmem.get("used"),(Long)nonheapmem.get("used"),threadcount,cpuload,classcount,open_file_descriptor,used_eden_mem,used_old_mem,used_perm_mem,used_surv_mem);
+		JvmMonitorInfo val = new JvmMonitorInfo((Long)heapmem.get("used"),(Long)nonheapmem.get("used"),threadcount,cpuload,classcount,open_file_descriptor,used_eden_mem,used_old_mem,used_perm_mem,used_surv_mem,ygc,ygct,fgc,fgct);
 		myRedis.saveJvmMonitor(val);
 	}
 	

@@ -36,6 +36,14 @@ public class JvmMonitorInfo {
 	
 	public Long used_surv_mem;
 	
+	public Long ygc;
+	
+	public Long ygct;
+	
+	public Long fgc;
+	
+	public Long fgct;
+	
 	public JvmMonitorInfo(){
 		
 	}
@@ -49,7 +57,11 @@ public class JvmMonitorInfo {
 			Long used_eden_mem,
 			Long used_old_mem,
 			Long used_perm_mem,
-			Long used_surv_mem
+			Long used_surv_mem,
+			Long ygc,
+			Long ygct,
+			Long fgc,
+			Long fgct
 			){
 		this.used_heap_mem=used_heap_mem;
 		this.used_nonheap_mem=used_nonheap_mem;
@@ -61,5 +73,9 @@ public class JvmMonitorInfo {
 		this.used_old_mem=used_old_mem;
 		this.used_perm_mem=used_perm_mem;
 		this.used_surv_mem=used_surv_mem;
+		this.ygc=ygc;
+		this.ygct=ygct;
+		this.fgc=fgc;
+		this.fgct=fgct;
 	}
 }
