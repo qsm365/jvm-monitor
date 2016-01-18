@@ -81,17 +81,19 @@ public class monitor {
 					Thread.sleep(10000);
 				} catch (InterruptedException ie) {
 					// TODO Auto-generated catch block
-					ie.printStackTrace();
+					//ie.printStackTrace();
+					System.out.println("sleep faild");
 				}
 				
 			} catch (ConnectException e){
 				System.out.println("connection failed,wait for 60s to retry");
 				c = null;
 				try {
-				Thread.sleep(60000);
+					Thread.sleep(60000);
 				} catch (InterruptedException ie) {
 					// TODO Auto-generated catch block
-					ie.printStackTrace();
+					//ie.printStackTrace();
+					System.out.println("sleep faild");
 					break;
 				}
 			} catch (IOException e) {
@@ -99,10 +101,11 @@ public class monitor {
 				//e.printStackTrace();
 				c = null;
 				try {
-				Thread.sleep(60000);
+					Thread.sleep(60000);
 				} catch (InterruptedException ie) {
 					// TODO Auto-generated catch block
-					ie.printStackTrace();
+					//ie.printStackTrace();
+					System.out.println("sleep faild");
 					break;
 				}
 			} catch (SecurityException e) {
@@ -112,26 +115,47 @@ public class monitor {
 				break;
 			} catch (AttributeNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("AttributeNotFoundException");
+				//e.printStackTrace();
 				break;
 			} catch (InstanceNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("InstanceNotFoundException,wait for 60s to retry");
+				//e.printStackTrace();
+				c = null;
+				try {
+					Thread.sleep(60000);
+				} catch (InterruptedException ie) {
+					// TODO Auto-generated catch block
+					//ie.printStackTrace();
+					System.out.println("sleep faild");
+					break;
+				}
 			} catch (MalformedObjectNameException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("MalformedObjectNameException");
+				//e.printStackTrace();
+				break;
 			} catch (MBeanException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("MBeanException");
+				//e.printStackTrace();
+				break;
 			} catch (ReflectionException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("ReflectionException");
+				//e.printStackTrace();
+				break;
 			} catch (IntrospectionException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("IntrospectionException");
+				//e.printStackTrace();
+				break;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
+				System.out.println("other Exception");
 				e.printStackTrace();
+				break;
 			}
 		}
 	}

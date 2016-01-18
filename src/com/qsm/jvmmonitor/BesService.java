@@ -25,6 +25,7 @@ public class BesService {
 	
 	public static void initBES(JMXConnector c) throws AttributeNotFoundException, InstanceNotFoundException, MalformedObjectNameException, MBeanException, ReflectionException, IOException{
 		Integer port = getBesPort(c);
+		//System.out.println("port:"+port);
 		app_port = port;
 		String instance_basedir = (String)JMXCommonService.getValueFromJMXMBean(c,"com.bes.appserv:type=Engine","baseDir");
 		String io_mode = getBesIOMode(c);
@@ -111,9 +112,12 @@ public class BesService {
 	private static Integer getBesPort(JMXConnector c) throws MalformedObjectNameException, IOException{
 		String query="com.bes.appserv:type=Connector,port=*,address=*";
 		Set<ObjectName> qr=JMXCommonService.queryNames(c,query);
-		Integer result = 0;
+		Integer result = 65535;
 		for(ObjectName on:qr){
-			result=Integer.parseInt(on.getKeyProperty("port"));
+			//System.out.println("protocol"+on.getKeyProperty("protocol"));
+			if(Integer.parseInt(on.getKeyProperty("port"))<result){
+				result=Integer.parseInt(on.getKeyProperty("port"));
+			}
 		}
 		return result;
 	}
